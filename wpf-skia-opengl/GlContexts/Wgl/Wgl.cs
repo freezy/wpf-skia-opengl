@@ -69,6 +69,8 @@ namespace SkiaSharp.Tests
 		public const int WGL_TYPE_RGBA_ARB = 0x202B;
 		public const int WGL_TYPE_COLORINDEX_ARB = 0x202C;
 
+		private static WNDCLASS wc;
+
 		static Wgl()
 		{
 			// save the current GL context
@@ -76,7 +78,7 @@ namespace SkiaSharp.Tests
 			var prevGLRC = Wgl.wglGetCurrentContext();
 
 			// register the dummy window class
-			var wc = new WNDCLASS
+			wc = new WNDCLASS
 			{
 				style = (User32.CS_HREDRAW | User32.CS_VREDRAW | User32.CS_OWNDC),
 				lpfnWndProc = (WNDPROC)User32.DefWindowProc,
