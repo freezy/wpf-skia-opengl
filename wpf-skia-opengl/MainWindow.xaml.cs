@@ -6,14 +6,11 @@ using SkiaSharp.Views.Desktop;
 
 namespace WPF
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
 	public partial class MainWindow : Window
 	{
 		private SKSurface _surface;
 		private GRContext _grContext;
-		private SKSize _canvasSize;
+		private SKSize _screenCanvasSize;
 
 		public MainWindow()
 		{
@@ -21,8 +18,6 @@ namespace WPF
 
 			var glContext = new WglContext();
 			glContext.MakeCurrent();
-
-			CompositionTarget.Rendering += (o, e) => BitmapHost.InvalidateVisual();
 		}
 
 		private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
@@ -33,17 +28,17 @@ namespace WPF
 		private void OnPaintSurface(SKCanvas canvas, int width, int height)
 		{
 			var canvasSize = new SKSize(width, height);
-			if (_canvasSize != canvasSize) {
 
+			// check if we need to recreate the off-screen surface
+			if (_screenCanvasSize != canvasSize) {
 				_surface?.Dispose();
 				_grContext?.Dispose();
 				_grContext = GRContext.Create(GRBackend.OpenGL);
 				_surface = SKSurface.Create(_grContext, true, new SKImageInfo(width, height));
-
-				_canvasSize = canvasSize;
+				_screenCanvasSize = canvasSize;
 			}
 
-			// draw onto offscreen gl context
+			// draw onto off-screen gl context
 			DrawOffscreen(_surface.Canvas, width, height);
 
 			// draw offscreen surface onto screen
@@ -52,6 +47,7 @@ namespace WPF
 
 		private void DrawOffscreen(SKCanvas canvas, int width, int height)
 		{
+			// will be more expensive in the real world
 			using (var paint = new SKPaint()) {
 				paint.TextSize = 64.0f;
 				paint.IsAntialias = true;
