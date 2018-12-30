@@ -1,10 +1,9 @@
 ﻿using System.Windows;
-using System.Windows.Media;
 using SkiaSharp;
 using SkiaSharp.Tests;
 using SkiaSharp.Views.Desktop;
 
-namespace WPF
+namespace WpfSkiaOpenGL
 {
 	public partial class MainWindow : Window
 	{
@@ -33,8 +32,12 @@ namespace WPF
 			if (_screenCanvasSize != canvasSize) {
 				_surface?.Dispose();
 				_grContext?.Dispose();
-				_grContext = GRContext.Create(GRBackend.OpenGL);
-				_surface = SKSurface.Create(_grContext, true, new SKImageInfo(width, height));
+
+				var glInterface = GRGlInterface.CreateNativeGlInterface();
+				_grContext = GRContext.Create(GRBackend.OpenGL, glInterface);
+				var glInfo = new GRGlFramebufferInfo(0, SKColorType.Rgba8888.ToGlSizedFormat());
+				var renderTarget = new GRBackendRenderTarget(width, height, 0, 0, glInfo);
+				_surface = SKSurface.Create(_grContext, renderTarget, GRSurfaceOrigin.TopLeft, SKColorType.Rgba8888);
 				_screenCanvasSize = canvasSize;
 			}
 
