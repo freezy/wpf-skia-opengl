@@ -11,13 +11,13 @@ namespace WpfSkiaOpenGL
 		private GRContext _grContext;
 		private SKSize _screenCanvasSize;
 
-		private static readonly WglContext GLContext = new WglContext();
+		private readonly WglContext _glContext = new WglContext();
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			
-			GLContext.MakeCurrent();
+			_glContext.MakeCurrent();
 		}
 
 		private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
@@ -49,7 +49,7 @@ namespace WpfSkiaOpenGL
 
 		private void DrawOffscreen(SKCanvas canvas, int width, int height)
 		{
-			canvas.Clear(SKColors.Gray);
+			canvas.Clear(SKColors.Gray.WithAlpha(0x80));
 
 			// will be more expensive in the real world
 			using (var paint = new SKPaint()) {
@@ -59,6 +59,11 @@ namespace WpfSkiaOpenGL
 				paint.IsStroke = false;
 				canvas.DrawText("SkiaSharp", width / 2f, 64.0f, paint);
 			}
+		}
+
+		private void OnWindowUnloaded(object sender, RoutedEventArgs e)
+		{
+			_glContext.Destroy();
 		}
 	}
 }
