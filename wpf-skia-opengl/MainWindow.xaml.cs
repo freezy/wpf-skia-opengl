@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using SkiaSharp;
 using SkiaSharp.Tests;
 using SkiaSharp.Views.Desktop;
@@ -61,8 +62,10 @@ namespace WpfSkiaOpenGL
 			}
 		}
 
-		private void OnWindowUnloaded(object sender, RoutedEventArgs e)
+		private void OnWindowClosing(object sender, CancelEventArgs e)
 		{
+			_surface?.Dispose();
+			_grContext?.Dispose();
 			_glContext.Destroy();
 		}
 	}

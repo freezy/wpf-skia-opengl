@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpf="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         mc:Ignorable="d"
-        Unloaded="OnWindowUnloaded"
+        Closing="OnWindowClosing"
         Background="Transparent"
         ResizeMode="CanResizeWithGrip"
         Title="MainWindow" Height="450" Width="800">
