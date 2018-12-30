@@ -11,12 +11,13 @@ namespace WpfSkiaOpenGL
 		private GRContext _grContext;
 		private SKSize _screenCanvasSize;
 
+		private static readonly WglContext GLContext = new WglContext();
+
 		public MainWindow()
 		{
 			InitializeComponent();
-
-			var glContext = new WglContext();
-			glContext.MakeCurrent();
+			
+			GLContext.MakeCurrent();
 		}
 
 		private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
@@ -33,11 +34,9 @@ namespace WpfSkiaOpenGL
 				_surface?.Dispose();
 				_grContext?.Dispose();
 
-				var glInterface = GRGlInterface.CreateNativeGlInterface();
-				_grContext = GRContext.Create(GRBackend.OpenGL, glInterface);
-				var glInfo = new GRGlFramebufferInfo(0, SKColorType.Rgba8888.ToGlSizedFormat());
-				var renderTarget = new GRBackendRenderTarget(width, height, 0, 0, glInfo);
-				_surface = SKSurface.Create(_grContext, renderTarget, GRSurfaceOrigin.TopLeft, SKColorType.Rgba8888);
+				_grContext = GRContext.Create(GRBackend.OpenGL);
+				_surface = SKSurface.Create(_grContext, true, new SKImageInfo(width, height));
+
 				_screenCanvasSize = canvasSize;
 			}
 
@@ -50,6 +49,8 @@ namespace WpfSkiaOpenGL
 
 		private void DrawOffscreen(SKCanvas canvas, int width, int height)
 		{
+			canvas.Clear(SKColors.Gray);
+
 			// will be more expensive in the real world
 			using (var paint = new SKPaint()) {
 				paint.TextSize = 64.0f;
