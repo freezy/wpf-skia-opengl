@@ -36,7 +36,8 @@ _grContext = GRContext.Create(GRBackend.OpenGL);
 _surface = SKSurface.Create(_grContext, true, new SKImageInfo(width, height));
 ```
 
-After drawing on the surface's canvas, the surface is drawn on the `SKElement`:
+After drawing on the surface's canvas, we draw the result back on 
+`SKElement`' canvas:
 
 ```c#
 canvas.DrawSurface(_surface, new SKPoint(0f, 0f));
