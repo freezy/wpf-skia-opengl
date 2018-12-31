@@ -22,7 +22,7 @@ There are however a few issues with `WindowsFormsHost`:
 ## How
 
 Instead of using OpenTK, we're creating a GL context through native calls on
-`opengl.dll`. This code has already been provided in SkiaSharp's test suite:
+`opengl32.dll`. This code has already been provided in SkiaSharp's test suite:
 
 ```c#
 _glContext = new WglContext();
